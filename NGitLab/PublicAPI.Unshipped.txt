@@ -138,6 +138,14 @@ NGitLab.GitLabException.OriginalCall.get -> System.Uri
 NGitLab.GitLabException.OriginalCall.set -> void
 NGitLab.GitLabException.StatusCode.get -> System.Net.HttpStatusCode
 NGitLab.GitLabException.StatusCode.set -> void
+NGitLab.GitLabRequestResult
+NGitLab.GitLabRequestResult.Exception.get -> System.Exception
+NGitLab.GitLabRequestResult.Exception.set -> void
+NGitLab.GitLabRequestResult.GitLabRequestResult() -> void
+NGitLab.GitLabRequestResult.Request.get -> System.Net.HttpWebRequest
+NGitLab.GitLabRequestResult.Request.set -> void
+NGitLab.GitLabRequestResult.Response.get -> System.Net.WebResponse
+NGitLab.GitLabRequestResult.Response.set -> void
 NGitLab.IBranchClient
 NGitLab.IBranchClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Branch>
 NGitLab.IBranchClient.Create(NGitLab.Models.BranchCreate branch) -> NGitLab.Models.Branch
@@ -4233,6 +4241,5 @@ virtual NGitLab.Impl.HttpRequestor.StreamAndHeadersAsync(string tailAPIUrl, Syst
 virtual NGitLab.Impl.HttpRequestor.StreamAsync(string tailAPIUrl, System.Func<System.IO.Stream, System.Threading.Tasks.Task> parser, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
 virtual NGitLab.Impl.HttpRequestor.To<T>(string tailAPIUrl) -> T
 virtual NGitLab.Impl.HttpRequestor.ToAsync<T>(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<T>
-virtual NGitLab.RequestOptions.GetResponse(System.Net.HttpWebRequest request) -> System.Net.WebResponse
-virtual NGitLab.RequestOptions.GetResponseAsync(System.Net.HttpWebRequest request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Net.WebResponse>
+virtual NGitLab.RequestOptions.ProcessGitLabRequestResult(NGitLab.GitLabRequestResult e) -> void
 virtual NGitLab.RequestOptions.ShouldRetry(System.Exception ex, int retryNumber) -> bool

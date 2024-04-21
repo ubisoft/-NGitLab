@@ -166,11 +166,12 @@ public class HttpRequestorTests
             return base.ShouldRetry(ex, retryNumber);
         }
 
-        public override WebResponse GetResponse(HttpWebRequest request)
+        public override void ProcessGitLabRequestResult(GitLabRequestResult result)
         {
+            var request = result.Request;
             HttpRequestSudoHeader = request.Headers["Sudo"];
             HandledRequests.Add(request);
-            throw new GitLabException { StatusCode = HttpStatusCode.InternalServerError };
+            result.Exception = new GitLabException { StatusCode = HttpStatusCode.InternalServerError };
         }
     }
 }

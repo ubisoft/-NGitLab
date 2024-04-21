@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using NGitLab.Impl;
 
 namespace NGitLab;
@@ -71,22 +69,10 @@ public class RequestOptions
     public static RequestOptions Default => new(retryCount: 0, retryInterval: TimeSpan.Zero);
 
     /// <summary>
-    /// Allows to monitor the web requests from the caller library, for example
-    /// to log the request duration and debug the library.
+    /// Allows to monitor GitLab requests from the caller library
     /// </summary>
-    public virtual WebResponse GetResponse(HttpWebRequest request)
+    public virtual void ProcessGitLabRequestResult(GitLabRequestResult e)
     {
-        return request.GetResponse();
-    }
-
-    public virtual async Task<WebResponse> GetResponseAsync(HttpWebRequest request, CancellationToken cancellationToken)
-    {
-        using var cancellationTokenRegistration =
-            cancellationToken.CanBeCanceled
-            ? cancellationToken.Register(request.Abort)
-            : default;
-
-        return await request.GetResponseAsync().ConfigureAwait(false);
     }
 
     internal virtual Stream GetRequestStream(HttpWebRequest request)

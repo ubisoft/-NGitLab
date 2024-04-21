@@ -98,39 +98,45 @@ public partial class HttpRequestor
 
         private WebResponse GetResponseImpl(RequestOptions options)
         {
+            var result = new GitLabRequestResult();
             try
             {
-                var request = CreateRequest(options);
-                return options.GetResponse(request);
+                result.Request = CreateRequest(options);
+                result.Response = result.Request.GetResponse();
             }
-            catch (WebException wex)
+            catch (Exception ex)
             {
-                if (wex.Response == null)
-                    throw;
-
-                HandleWebException(wex);
-                throw;
+                result.Exception = ex is WebException wex && wex.Response is not null ?
+                                   HandleWebException(wex) :
+                                   ex;
             }
+
+            options.ProcessGitLabRequestResult(result);
+
+            return result.Exception is not null ? throw result.Exception : result.Response;
         }
 
         private async Task<WebResponse> GetResponseImplAsync(RequestOptions options, CancellationToken cancellationToken)
         {
+            var result = new GitLabRequestResult();
             try
             {
-                var request = CreateRequest(options);
-                return await options.GetResponseAsync(request, cancellationToken).ConfigureAwait(false);
+                result.Request = CreateRequest(options);
+                result.Response = await result.Request.GetResponseAsync().ConfigureAwait(false);
             }
-            catch (WebException wex)
+            catch (Exception ex)
             {
-                if (wex.Response == null)
-                    throw;
-
-                HandleWebException(wex);
-                throw;
+                result.Exception = ex is WebException wex && wex.Response is not null ?
+                                   HandleWebException(wex) :
+                                   ex;
             }
+
+            options.ProcessGitLabRequestResult(result);
+
+            return result.Exception is not null ? throw result.Exception : result.Response;
         }
 
-        private void HandleWebException(WebException ex)
+        private GitLabException HandleWebException(WebException ex)
         {
             using var errorResponse = (HttpWebResponse)ex.Response;
             string jsonString;
@@ -149,7 +155,7 @@ public partial class HttpRequestor
                 exceptionMessage += $". With data {JsonData}";
             }
 
-            throw new GitLabException(exceptionMessage)
+            return new GitLabException(exceptionMessage)
             {
                 OriginalCall = Url,
                 ErrorObject = errorDetails,
