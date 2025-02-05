@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
@@ -107,12 +110,36 @@ internal sealed class RepositoryClient : ClientBase, IRepositoryClient
         }
     }
 
+    public async IAsyncEnumerable<Commit> GetCommitsAsync(GetCommitsRequest request, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+
+        using (Context.BeginOperationScope())
+        {
+            var project = GetProject(_projectId, ProjectPermission.View);
+            foreach (var commit in project.Repository.GetCommits(request))
+            {
+                yield return ConvertToNGitLabCommit(commit, project);
+            }
+        }
+    }
+
     public Commit GetCommit(Sha1 sha)
     {
         throw new NotImplementedException();
     }
 
+    public Task<Commit> GetCommitAsync(Sha1 sha, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public IEnumerable<Diff> GetCommitDiff(Sha1 sha)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IAsyncEnumerable<Diff> GetCommitDiffAsync(Sha1 sha, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

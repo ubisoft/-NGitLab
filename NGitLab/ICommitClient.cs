@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using System.Threading;
 using NGitLab.Models;
 
 namespace NGitLab;
@@ -21,6 +23,11 @@ public interface ICommitClient
     /// Get a specific commit identified by the commit hash or name of a branch or tag.
     /// </summary>
     Commit GetCommit(string @ref);
+
+    /// <summary>
+    /// Get a specific commit identified by the commit hash or name of a branch or tag.
+    /// </summary>
+    Task<Commit> GetCommitAsync(string @ref, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Cherry-picks a commit to a given branch.

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using NGitLab.Impl.Json;
 using NGitLab.Models;
 
@@ -212,8 +214,9 @@ public partial class HttpRequestor : IHttpRequestor
                 var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options);
                 using (var response = await request.GetResponseAsync(_options, cancellationToken).ConfigureAwait(false))
                 {
-                    nextUrlToLoad = GetNextPageUrl(response);
-
+                    NameValueCollection queryParameters = HttpUtility.ParseQueryString(_startUrl.Query);
+                    nextUrlToLoad = queryParameters["page"] is null ? GetNextPageUrl(response) : null;
+                    
                     using var stream = response.GetResponseStream();
                     responseText = await ReadTextAsync(stream).ConfigureAwait(false);
                 }
@@ -233,8 +236,9 @@ public partial class HttpRequestor : IHttpRequestor
                 var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options);
                 using (var response = request.GetResponse(_options))
                 {
-                    nextUrlToLoad = GetNextPageUrl(response);
-
+                    NameValueCollection queryParameters = HttpUtility.ParseQueryString(_startUrl.Query);
+                    nextUrlToLoad = queryParameters["page"] is null? GetNextPageUrl(response) : null;
+                    
                     using var stream = response.GetResponseStream();
                     responseText = ReadText(stream);
                 }

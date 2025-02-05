@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Threading;
 using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
@@ -35,6 +37,12 @@ internal sealed class CommitClient : ClientBase, ICommitClient
 
             return commit?.ToCommitClient(project);
         }
+    }
+
+    public async Task<Commit> GetCommitAsync(string @ref, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        return GetCommit(@ref);
     }
 
     public Commit CherryPick(CommitCherryPick cherryPick)

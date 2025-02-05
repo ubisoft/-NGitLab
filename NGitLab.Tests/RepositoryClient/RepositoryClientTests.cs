@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Formats.Tar;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
@@ -58,6 +60,20 @@ public class RepositoryClientTests
 
     [Test]
     [NGitLabRetry]
+    public async Task GetCommitBySha1Async()
+    {
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+
+        var sha1 = context.Commits[0].Id;
+        var commit = await context.RepositoryClient.GetCommitAsync(sha1);
+        Assert.That(commit.Id, Is.EqualTo(sha1));
+        Assert.That(commit.Message, Is.EqualTo(context.Commits[0].Message));
+        Assert.That(commit.WebUrl, Is.EqualTo(context.Commits[0].WebUrl));
+        Assert.That(commit.WebUrl, Is.Not.Null);
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task GetCommitBySha1Range()
     {
         using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
@@ -70,6 +86,28 @@ public class RepositoryClientTests
         };
 
         var commits = context.RepositoryClient.GetCommits(commitRequest).Reverse().ToArray();
+        Assert.That(commits[0].Id, Is.EqualTo(allCommits[2].Id));
+        Assert.That(commits[1].Id, Is.EqualTo(allCommits[3].Id));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task GetCommitBySha1RangeAsync()
+    {
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
+
+        var allCommits = context.RepositoryClient.Commits.Reverse().ToArray();
+        var commitRequest = new GetCommitsRequest
+        {
+            RefName = $"{allCommits[1].Id}..{allCommits[3].Id}",
+            FirstParent = true,
+        };
+
+        List<Commit> commits = new();
+        await foreach(var commit in context.RepositoryClient.GetCommitsAsync(commitRequest)){
+            commits.Add(commit);
+        }
+        commits.Reverse();
         Assert.That(commits[0].Id, Is.EqualTo(allCommits[2].Id));
         Assert.That(commits[1].Id, Is.EqualTo(allCommits[3].Id));
     }
@@ -101,6 +139,35 @@ public class RepositoryClientTests
 
     [Test]
     [NGitLabRetry]
+    public async Task GetCommitsSinceAsync()
+    {
+        // Arrange
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
+
+        var defaultBranch = context.Project.DefaultBranch;
+        var since = DateTime.UtcNow;
+        var expectedSinceValue = Uri.EscapeDataString(since.ToString("s", CultureInfo.InvariantCulture));
+        var commitRequest = new GetCommitsRequest
+        {
+            RefName = defaultBranch,
+            Since = since,
+        };
+
+        // Act
+        List<Commit> commits = new();
+        await foreach (var commit in context.RepositoryClient.GetCommitsAsync(commitRequest))
+        {
+            commits.Add(commit);
+        }
+
+        // Assert
+        var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
+
+        Assert.That(lastRequestQueryString, Does.Contain($"since={expectedSinceValue}"));
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task GetCommitsDoesntIncludeSinceWhenNotSpecified()
     {
         // Arrange
@@ -115,6 +182,33 @@ public class RepositoryClientTests
 
         // Act
         var commits = context.RepositoryClient.GetCommits(commitRequest).ToArray();
+
+        // Assert
+        var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
+
+        Assert.That(lastRequestQueryString, Does.Not.Contain("since="));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task GetCommitsDoesntIncludeSinceWhenNotSpecifiedAsync()
+    {
+        // Arrange
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
+
+        var defaultBranch = context.Project.DefaultBranch;
+        var commitRequest = new GetCommitsRequest
+        {
+            RefName = defaultBranch,
+            Since = null,
+        };
+
+        // Act
+        List<Commit> commits = new();
+        await foreach (var commit in context.RepositoryClient.GetCommitsAsync(commitRequest))
+        {
+            commits.Add(commit);
+        }
 
         // Assert
         var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
@@ -149,6 +243,35 @@ public class RepositoryClientTests
 
     [Test]
     [NGitLabRetry]
+    public async Task GetCommitsUntilAsync()
+    {
+        // Arrange
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
+
+        var defaultBranch = context.Project.DefaultBranch;
+        var until = DateTime.UtcNow;
+        var expectedUntilValue = Uri.EscapeDataString(until.ToString("s", CultureInfo.InvariantCulture));
+        var commitRequest = new GetCommitsRequest
+        {
+            RefName = defaultBranch,
+            Until = until,
+        };
+
+        // Act
+        List<Commit> commits = new();
+        await foreach (var commit in context.RepositoryClient.GetCommitsAsync(commitRequest))
+        {
+            commits.Add(commit);
+        }
+
+        // Assert
+        var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
+
+        Assert.That(lastRequestQueryString, Does.Contain($"until={expectedUntilValue}"));
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task GetCommitsDoesntIncludeUntilWhenNotSpecified()
     {
         // Arrange
@@ -172,11 +295,197 @@ public class RepositoryClientTests
 
     [Test]
     [NGitLabRetry]
+    public async Task GetCommitsDoesntIncludeUntilWhenNotSpecifiedAsync()
+    {
+        // Arrange
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
+
+        var defaultBranch = context.Project.DefaultBranch;
+        var commitRequest = new GetCommitsRequest
+        {
+            RefName = defaultBranch,
+            Until = null,
+        };
+
+        // Act
+        List<Commit> commits = new();
+        await foreach (var commit in context.RepositoryClient.GetCommitsAsync(commitRequest))
+        {
+            commits.Add(commit);
+        }
+
+        // Assert
+        var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
+
+        Assert.That(lastRequestQueryString, Does.Not.Contain("until="));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task GetCommitsDoesntIncludePageWhenNotSpecified()
+    {
+        // Arrange
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
+
+        var defaultBranch = context.Project.DefaultBranch;
+        var commitRequest = new GetCommitsRequest
+        {
+            RefName = defaultBranch,
+            Page = null,
+        };
+
+        // Act
+        var commits = context.RepositoryClient.GetCommits(commitRequest).ToArray();
+
+        // Assert
+        var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
+
+        NameValueCollection queryParameters = HttpUtility.ParseQueryString(lastRequestQueryString);
+        Assert.That(queryParameters, Does.Not.Contain("page"));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task GetCommitsDoesntIncludePageWhenNotSpecifiedAsync()
+    {
+        // Arrange
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
+
+        var defaultBranch = context.Project.DefaultBranch;
+        var commitRequest = new GetCommitsRequest
+        {
+            RefName = defaultBranch,
+            Page = null,
+        };
+
+        // Act
+        List<Commit> commits = new();
+        await foreach (var commit in context.RepositoryClient.GetCommitsAsync(commitRequest))
+        {
+            commits.Add(commit);
+        }
+
+        // Assert
+        var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
+        NameValueCollection queryParameters = HttpUtility.ParseQueryString(lastRequestQueryString);
+        Assert.That(queryParameters, Does.Not.Contain("page"));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task GetCommitsRetrievesPageWhenSpecified()
+    {
+        // Arrange
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
+
+        var defaultBranch = context.Project.DefaultBranch;
+        var commitRequest = new GetCommitsRequest
+        {
+            RefName = defaultBranch,
+            Page = 1,
+            PerPage = 2
+        };
+
+        // Act
+        var commits = context.RepositoryClient.GetCommits(commitRequest).ToArray();
+
+        // Assert
+        Assert.That(commits.Length, Is.EqualTo(2));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task GetCommitsRetrievesPageWhenSpecifiedAsync()
+    {
+        // Arrange
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
+
+        var defaultBranch = context.Project.DefaultBranch;
+        var commitRequest = new GetCommitsRequest
+        {
+            RefName = defaultBranch,
+            Page = 1,
+            PerPage = 2
+        };
+
+        // Act
+        List<Commit> commits = new();
+        await foreach (var commit in context.RepositoryClient.GetCommitsAsync(commitRequest))
+        {
+            commits.Add(commit);
+        }
+
+        // Assert
+        Assert.That(commits.Count, Is.EqualTo(2));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task GetCommitsRetrievesAllPagesWhenNoPageSpecified()
+    {
+        // Arrange
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
+
+        var defaultBranch = context.Project.DefaultBranch;
+        var commitRequest = new GetCommitsRequest
+        {
+            RefName = defaultBranch,
+            PerPage = 2
+        };
+
+        // Act
+        var commits = context.RepositoryClient.GetCommits(commitRequest).ToArray();
+
+        // Assert
+        Assert.That(commits.Length, Is.EqualTo(5));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task GetCommitsRetrievesAllPagesWhenNoPageSpecifiedAsync()
+    {
+        // Arrange
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
+
+        var defaultBranch = context.Project.DefaultBranch;
+        var commitRequest = new GetCommitsRequest
+        {
+            RefName = defaultBranch,
+            PerPage = 2
+        };
+
+        // Act
+        List<Commit> commits = new();
+        await foreach (var commit in context.RepositoryClient.GetCommitsAsync(commitRequest))
+        {
+            commits.Add(commit);
+        }
+
+        // Assert
+        Assert.That(commits.Count, Is.EqualTo(5));
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task GetCommitDiff()
     {
         using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
 
         Assert.That(context.RepositoryClient.GetCommitDiff(context.RepositoryClient.Commits.First().Id).ToArray(), Is.Not.Empty);
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task GetCommitDiffAsync()
+    {
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+        var commitDiffs = new List<Diff>();
+
+        await foreach (var commitDiff in context.RepositoryClient.GetCommitDiffAsync(context.RepositoryClient.Commits.First().Id))
+        {
+            commitDiffs.Add(commitDiff);
+        }
+        Assert.That(commitDiffs, Is.Not.Empty);
     }
 
     [TestCase(4)]
