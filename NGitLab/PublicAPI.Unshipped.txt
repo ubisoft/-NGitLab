@@ -34,6 +34,8 @@ NGitLab.GetCommitsRequest.FirstParent.set -> void
 NGitLab.GetCommitsRequest.GetCommitsRequest() -> void
 NGitLab.GetCommitsRequest.MaxResults.get -> int
 NGitLab.GetCommitsRequest.MaxResults.set -> void
+NGitLab.GetCommitsRequest.Page.get -> uint?
+NGitLab.GetCommitsRequest.Page.set -> void
 NGitLab.GetCommitsRequest.Path.get -> string
 NGitLab.GetCommitsRequest.Path.set -> void
 NGitLab.GetCommitsRequest.PerPage.get -> uint
@@ -132,6 +134,7 @@ NGitLab.ICommitClient
 NGitLab.ICommitClient.CherryPick(NGitLab.Models.CommitCherryPick cherryPick) -> NGitLab.Models.Commit
 NGitLab.ICommitClient.Create(NGitLab.Models.CommitCreate commit) -> NGitLab.Models.Commit
 NGitLab.ICommitClient.GetCommit(string ref) -> NGitLab.Models.Commit
+NGitLab.ICommitClient.GetCommitAsync(string ref, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Commit>
 NGitLab.ICommitClient.GetJobStatus(string branchName) -> NGitLab.JobStatus
 NGitLab.ICommitClient.GetRelatedMergeRequestsAsync(NGitLab.Models.RelatedMergeRequestsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
 NGitLab.ICommitClient.Revert(NGitLab.Models.CommitRevert revert) -> NGitLab.Models.Commit
@@ -478,6 +481,7 @@ NGitLab.Impl.CommitClient.CherryPick(NGitLab.Models.CommitCherryPick cherryPick)
 NGitLab.Impl.CommitClient.CommitClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.CommitClient.Create(NGitLab.Models.CommitCreate commit) -> NGitLab.Models.Commit
 NGitLab.Impl.CommitClient.GetCommit(string ref) -> NGitLab.Models.Commit
+NGitLab.Impl.CommitClient.GetCommitAsync(string ref, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Commit>
 NGitLab.Impl.CommitClient.GetJobStatus(string branchName) -> NGitLab.JobStatus
 NGitLab.Impl.CommitClient.GetRelatedMergeRequestsAsync(NGitLab.Models.RelatedMergeRequestsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
 NGitLab.Impl.CommitClient.Revert(NGitLab.Models.CommitRevert revert) -> NGitLab.Models.Commit
@@ -867,10 +871,13 @@ NGitLab.Impl.RepositoryClient.Contributors.get -> NGitLab.IContributorClient
 NGitLab.Impl.RepositoryClient.Files.get -> NGitLab.IFilesClient
 NGitLab.Impl.RepositoryClient.GetArchive(System.Action<System.IO.Stream> parser) -> void
 NGitLab.Impl.RepositoryClient.GetCommit(NGitLab.Sha1 sha) -> NGitLab.Models.Commit
+NGitLab.Impl.RepositoryClient.GetCommitAsync(NGitLab.Sha1 sha, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Commit>
 NGitLab.Impl.RepositoryClient.GetCommitDiff(NGitLab.Sha1 sha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Diff>
+NGitLab.Impl.RepositoryClient.GetCommitDiffAsync(NGitLab.Sha1 sha, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<NGitLab.Models.Diff>
 NGitLab.Impl.RepositoryClient.GetCommitRefs(NGitLab.Sha1 sha, NGitLab.Models.CommitRefType type = NGitLab.Models.CommitRefType.All) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Ref>
 NGitLab.Impl.RepositoryClient.GetCommits(NGitLab.GetCommitsRequest request) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Commit>
 NGitLab.Impl.RepositoryClient.GetCommits(string refName, int maxResults = 0) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Commit>
+NGitLab.Impl.RepositoryClient.GetCommitsAsync(NGitLab.GetCommitsRequest request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<NGitLab.Models.Commit>
 NGitLab.Impl.RepositoryClient.GetRawBlob(string sha, System.Action<System.IO.Stream> parser) -> void
 NGitLab.Impl.RepositoryClient.GetTree(NGitLab.Models.RepositoryGetTreeOptions options) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>
 NGitLab.Impl.RepositoryClient.GetTree(string path) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>
@@ -1100,10 +1107,13 @@ NGitLab.IRepositoryClient.Contributors.get -> NGitLab.IContributorClient
 NGitLab.IRepositoryClient.Files.get -> NGitLab.IFilesClient
 NGitLab.IRepositoryClient.GetArchive(System.Action<System.IO.Stream> parser) -> void
 NGitLab.IRepositoryClient.GetCommit(NGitLab.Sha1 sha) -> NGitLab.Models.Commit
+NGitLab.IRepositoryClient.GetCommitAsync(NGitLab.Sha1 sha, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Commit>
 NGitLab.IRepositoryClient.GetCommitDiff(NGitLab.Sha1 sha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Diff>
+NGitLab.IRepositoryClient.GetCommitDiffAsync(NGitLab.Sha1 sha, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<NGitLab.Models.Diff>
 NGitLab.IRepositoryClient.GetCommitRefs(NGitLab.Sha1 sha, NGitLab.Models.CommitRefType type = NGitLab.Models.CommitRefType.All) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Ref>
 NGitLab.IRepositoryClient.GetCommits(NGitLab.GetCommitsRequest request) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Commit>
 NGitLab.IRepositoryClient.GetCommits(string refName, int maxResults = 0) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Commit>
+NGitLab.IRepositoryClient.GetCommitsAsync(NGitLab.GetCommitsRequest request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<NGitLab.Models.Commit>
 NGitLab.IRepositoryClient.GetRawBlob(string sha, System.Action<System.IO.Stream> parser) -> void
 NGitLab.IRepositoryClient.GetTree(NGitLab.Models.RepositoryGetTreeOptions options) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>
 NGitLab.IRepositoryClient.GetTree(string path) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>

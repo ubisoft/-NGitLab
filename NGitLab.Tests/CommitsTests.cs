@@ -25,6 +25,18 @@ public class CommitsTests
 
     [Test]
     [NGitLabRetry]
+    public async Task Test_can_get_commit_async()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject(initializeWithCommits: true);
+
+        var commit = await context.Client.GetCommits(project.Id).GetCommitAsync(project.DefaultBranch);
+        Assert.That(commit.Message, Is.Not.Null);
+        Assert.That(commit.ShortId, Is.Not.Null);
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task Test_can_get_stats_in_commit()
     {
         using var context = await GitLabTestContext.CreateAsync();
@@ -46,6 +58,34 @@ public class CommitsTests
         });
 
         var commit = context.Client.GetCommits(project.Id).GetCommit(project.DefaultBranch);
+        Assert.That(commit.Stats.Additions, Is.EqualTo(4));
+        Assert.That(commit.Stats.Deletions, Is.EqualTo(1));
+        Assert.That(commit.Stats.Total, Is.EqualTo(5));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_can_get_stats_in_commit_async()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject(initializeWithCommits: true);
+        context.Client.GetRepository(project.Id).Files.Create(new FileUpsert
+        {
+            Branch = project.DefaultBranch,
+            CommitMessage = "file to be updated",
+            Path = "CommitStats.txt",
+            RawContent = "I'm defective and i need to be fixeddddddddddddddd",
+        });
+
+        context.Client.GetRepository(project.Id).Files.Update(new FileUpsert
+        {
+            Branch = project.DefaultBranch,
+            CommitMessage = "fixing the file",
+            Path = "CommitStats.txt",
+            RawContent = "I'm no longer defective and i have been fixed\n\n\r\n\r\rEnjoy",
+        });
+
+        var commit = await context.Client.GetCommits(project.Id).GetCommitAsync(project.DefaultBranch);
         Assert.That(commit.Stats.Additions, Is.EqualTo(4));
         Assert.That(commit.Stats.Deletions, Is.EqualTo(1));
         Assert.That(commit.Stats.Total, Is.EqualTo(5));

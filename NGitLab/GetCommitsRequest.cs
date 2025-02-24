@@ -16,6 +16,8 @@ public class GetCommitsRequest
 
     public uint PerPage { get; set; } = DefaultPerPage;
 
+    public uint? Page { get; set; }
+
     public DateTime? Since { get; set; }
 
     public DateTime? Until { get; set; }

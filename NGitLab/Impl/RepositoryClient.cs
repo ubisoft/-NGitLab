@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
@@ -68,6 +71,29 @@ public class RepositoryClient : IRepositoryClient
     /// </summary>
     public IEnumerable<Commit> GetCommits(GetCommitsRequest request)
     {
+        var path = BuildGetCommitsPath(request);
+        var allCommits = _api.Get().GetAll<Commit>(path);
+        if (request.MaxResults <= 0)
+            return allCommits;
+
+        return allCommits.Take(request.MaxResults);
+    }
+
+    public async IAsyncEnumerable<Commit> GetCommitsAsync(GetCommitsRequest request, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var path = BuildGetCommitsPath(request);
+        int count = 0;
+        await foreach (var t in _api.Get().GetAllAsync<Commit>(path).WithCancellation(cancellationToken).ConfigureAwait(false))
+        {
+            count++;
+            yield return t;
+            if (count == request.MaxResults)
+                break;
+        }
+    }
+
+    private string BuildGetCommitsPath(GetCommitsRequest request)
+    {
         var lst = new List<string>();
         if (!string.IsNullOrWhiteSpace(request.RefName))
         {
@@ -94,15 +120,16 @@ public class RepositoryClient : IRepositoryClient
             lst.Add($"until={Uri.EscapeDataString(request.Until.Value.ToString("s", CultureInfo.InvariantCulture))}");
         }
 
+        if (request.Page.HasValue)
+        {
+            lst.Add($"page={request.Page.Value.ToStringInvariant()}");
+        }
+
         var perPage = request.MaxResults > 0 ? Math.Min(request.MaxResults, request.PerPage) : request.PerPage;
         lst.Add($"per_page={perPage.ToStringInvariant()}");
 
         var path = _repoPath + "/commits" + (lst.Count == 0 ? string.Empty : "?" + string.Join("&", lst));
-        var allCommits = _api.Get().GetAll<Commit>(path);
-        if (request.MaxResults <= 0)
-            return allCommits;
-
-        return allCommits.Take(request.MaxResults);
+        return path;
     }
 
     public CompareResults Compare(CompareQuery query)
@@ -112,7 +139,11 @@ public class RepositoryClient : IRepositoryClient
 
     public Commit GetCommit(Sha1 sha) => _api.Get().To<Commit>(_repoPath + "/commits/" + sha);
 
+    public Task<Commit> GetCommitAsync(Sha1 sha, CancellationToken cancellationToken = default) => _api.Get().ToAsync<Commit>(_repoPath + "/commits/" + sha, cancellationToken);
+
     public IEnumerable<Diff> GetCommitDiff(Sha1 sha) => _api.Get().GetAll<Diff>(_repoPath + "/commits/" + sha + "/diff");
+
+    public IAsyncEnumerable<Diff> GetCommitDiffAsync(Sha1 sha, CancellationToken cancellationToken = default ) => _api.Get().GetAllAsync<Diff>(_repoPath + "/commits/" + sha + "/diff");
 
     public IEnumerable<Ref> GetCommitRefs(Sha1 sha, CommitRefType type = CommitRefType.All) =>
         _api.Get().GetAll<Ref>($"{_repoPath}/commits/{sha}/refs?type={type.ToString().ToLowerInvariant()}");

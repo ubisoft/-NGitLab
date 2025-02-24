@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab;
@@ -37,9 +39,15 @@ public interface IRepositoryClient
     /// </summary>
     IEnumerable<Commit> GetCommits(GetCommitsRequest request);
 
+    IAsyncEnumerable<Commit> GetCommitsAsync(GetCommitsRequest request, CancellationToken cancellationToken = default);
+
     Commit GetCommit(Sha1 sha);
 
+    Task<Commit> GetCommitAsync(Sha1 sha, CancellationToken cancellationToken = default);
+
     IEnumerable<Diff> GetCommitDiff(Sha1 sha);
+
+    IAsyncEnumerable<Diff> GetCommitDiffAsync(Sha1 sha, CancellationToken cancellationToken = default);
 
     IEnumerable<Ref> GetCommitRefs(Sha1 sha, CommitRefType type = CommitRefType.All);
 
