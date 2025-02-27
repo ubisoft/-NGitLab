@@ -9,14 +9,11 @@ namespace NGitLab.Models;
 /// </summary>
 public class CommitStatusCreate
 {
-    [JsonPropertyName("sha")]
+    [JsonIgnore]
     public string CommitSha { get; set; }
 
     [JsonPropertyName("state")]
-    public string State { get; set; }
-
-    [JsonPropertyName("status")]
-    public string Status { get; set; }
+    public required string State { get; set; }
 
     [JsonPropertyName("ref")]
     public string Ref { get; set; }

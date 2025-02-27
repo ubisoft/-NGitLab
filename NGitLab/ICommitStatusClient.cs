@@ -15,5 +15,5 @@ public interface ICommitStatusClient
     /// <remarks>
     /// Refer to <see href="https://docs.gitlab.com/ee/api/commits.html#set-the-pipeline-status-of-a-commit">"Set the pipeline status of a commit" GitLab doc</see>
     /// </remarks>
-    CommitStatusCreate AddOrUpdate(CommitStatusCreate status);
+    CommitStatus AddOrUpdate(CommitStatusCreate status);
 }

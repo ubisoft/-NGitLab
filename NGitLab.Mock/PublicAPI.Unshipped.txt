@@ -84,7 +84,6 @@ NGitLab.Mock.CommitStatus.Status.set -> void
 NGitLab.Mock.CommitStatus.TargetUrl.get -> string
 NGitLab.Mock.CommitStatus.TargetUrl.set -> void
 NGitLab.Mock.CommitStatus.ToClientCommitStatus() -> NGitLab.Models.CommitStatus
-NGitLab.Mock.CommitStatus.ToClientCommitStatusCreate() -> NGitLab.Models.CommitStatusCreate
 NGitLab.Mock.CommitStatusCollection
 NGitLab.Mock.CommitStatusCollection.CommitStatusCollection(NGitLab.Mock.GitLabObject parent) -> void
 NGitLab.Mock.Config.GitLabCollection<TItem, TParent>
