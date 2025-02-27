@@ -9,6 +9,8 @@ namespace NGitLab;
 
 public interface IHttpRequestor
 {
+    IReadOnlyDictionary<string, IEnumerable<string>> GetHeader(string tailAPIUrl);
+
     IEnumerable<T> GetAll<T>(string tailUrl);
 
     GitLabCollectionResponse<T> GetAllAsync<T>(string tailUrl);

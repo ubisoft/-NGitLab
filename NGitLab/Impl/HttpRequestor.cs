@@ -43,6 +43,14 @@ public partial class HttpRequestor : IHttpRequestor
         _options = options;
     }
 
+    public IReadOnlyDictionary<string, IEnumerable<string>> GetHeader(string tailAPIUrl)
+    {
+        var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options);
+
+        using var response = request.GetResponse(_options);
+        return new WebHeadersDictionaryAdaptor(response.Headers);
+    }
+
     public IHttpRequestor With(object data)
     {
         _data = data;

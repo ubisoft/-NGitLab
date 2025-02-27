@@ -281,6 +281,7 @@ NGitLab.IHttpRequestor.Execute(string tailAPIUrl) -> void
 NGitLab.IHttpRequestor.ExecuteAsync(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
 NGitLab.IHttpRequestor.GetAll<T>(string tailUrl) -> System.Collections.Generic.IEnumerable<T>
 NGitLab.IHttpRequestor.GetAllAsync<T>(string tailUrl) -> NGitLab.GitLabCollectionResponse<T>
+NGitLab.IHttpRequestor.GetHeader(string tailAPIUrl) -> System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>>
 NGitLab.IHttpRequestor.Page<T>(string tailAPIUrl) -> NGitLab.Models.PagedResponse<T>
 NGitLab.IHttpRequestor.PageAsync<T>(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<NGitLab.Models.PagedResponse<T>>
 NGitLab.IHttpRequestor.Stream(string tailAPIUrl, System.Action<System.IO.Stream> parser) -> void
@@ -534,6 +535,7 @@ NGitLab.Impl.FilesClient.FileExistsAsync(string filePath, string ref, System.Thr
 NGitLab.Impl.FilesClient.FilesClient(NGitLab.Impl.API api, string repoPath) -> void
 NGitLab.Impl.FilesClient.Get(string filePath, string ref) -> NGitLab.Models.FileData
 NGitLab.Impl.FilesClient.GetAsync(string filePath, string ref, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.FileData>
+NGitLab.Impl.FilesClient.GetMetaData(string filePath, string ref) -> string
 NGitLab.Impl.FilesClient.Update(NGitLab.Models.FileUpsert file) -> void
 NGitLab.Impl.FilesClient.UpdateAsync(NGitLab.Models.FileUpsert file, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.GitLabChangeDiffCounter
@@ -588,6 +590,7 @@ NGitLab.Impl.GroupsClient.Update(long id, NGitLab.Models.GroupUpdate groupUpdate
 NGitLab.Impl.GroupsClient.UpdateAsync(long id, NGitLab.Models.GroupUpdate groupUpdate, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.Impl.HttpRequestor
 NGitLab.Impl.HttpRequestor.GetAPIUrl(string tailAPIUrl) -> System.Uri
+NGitLab.Impl.HttpRequestor.GetHeader(string tailAPIUrl) -> System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>>
 NGitLab.Impl.HttpRequestor.GetUrl(string tailAPIUrl) -> System.Uri
 NGitLab.Impl.HttpRequestor.HttpRequestor(string hostUrl, string apiToken, NGitLab.Impl.MethodType methodType) -> void
 NGitLab.Impl.HttpRequestor.HttpRequestor(string hostUrl, string apiToken, NGitLab.Impl.MethodType methodType, NGitLab.RequestOptions options) -> void

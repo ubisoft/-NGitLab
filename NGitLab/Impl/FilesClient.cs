@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -55,6 +57,13 @@ public class FilesClient : IFilesClient
     public Task<FileData> GetAsync(string filePath, string @ref, CancellationToken cancellationToken = default)
     {
         return _api.Get().ToAsync<FileData>(_repoPath + $"/files/{EncodeFilePath(filePath)}?ref={Uri.EscapeDataString(@ref)}", cancellationToken);
+    }
+
+    public string GetMetaData(string filePath, string @ref)
+    {
+        IEnumerable<string> aa;
+        _api.Head().GetHeader(_repoPath + $"/files/{EncodeFilePath(filePath)}?ref={Uri.EscapeDataString(@ref)}").TryGetValue("X-Gitlab-Content-Sha256", out aa);
+        return aa.FirstOrDefault();
     }
 
     public bool FileExists(string filePath, string @ref)
