@@ -32,7 +32,7 @@ public sealed class GitLabTestContext : IDisposable
     private static readonly SemaphoreSlim s_prepareRunnerLock = new(1, 1);
 
     private readonly GitLabTestContextRequestOptions _customRequestOptions = new();
-    private readonly List<IGitLabClient> _clients = new();
+    private readonly List<IGitLabClient> _clients = [];
 
     public GitLabDockerContainer DockerContainer { get; set; }
 

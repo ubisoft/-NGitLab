@@ -95,7 +95,7 @@ internal sealed class ConfigSerializer
             foreach (var match in matches)
             {
                 if (index < match.Index)
-                    bld.Append(Environment.ExpandEnvironmentVariables(str.Substring(index, match.Index - index)));
+                    bld.Append(Environment.ExpandEnvironmentVariables(str[index..match.Index]));
 
                 if (string.Equals(match.Value, "{{", StringComparison.Ordinal))
                     bld.Append('{');
@@ -108,7 +108,7 @@ internal sealed class ConfigSerializer
             }
 
             if (index < str.Length)
-                bld.Append(Environment.ExpandEnvironmentVariables(str.Substring(index)));
+                bld.Append(Environment.ExpandEnvironmentVariables(str[index..]));
 
             return bld.ToString();
         }

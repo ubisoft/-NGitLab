@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NGitLab.Impl;
 using NGitLab.Mock.Internals;
 using NGitLab.Models;
 

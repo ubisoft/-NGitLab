@@ -27,17 +27,17 @@ internal sealed class BranchClient : ClientBase, IBranchClient
                 break;
 
             case not null when search[0] == '^' && search[search.Length - 1] == '$':
-                search = search.Substring(1, search.Length - 1 - 1);
+                search = search[1..^1];
                 filterBranch = branch => branch.Equals(search, StringComparison.OrdinalIgnoreCase);
                 break;
 
             case not null when search[0] == '^':
-                search = search.Substring(1);
+                search = search[1..];
                 filterBranch = branch => branch.StartsWith(search, StringComparison.OrdinalIgnoreCase);
                 break;
 
             case not null when search[search.Length - 1] == '$':
-                search = search.Substring(0, search.Length - 1);
+                search = search[..^1];
                 filterBranch = branch => branch.EndsWith(search, StringComparison.OrdinalIgnoreCase);
                 break;
 

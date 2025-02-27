@@ -8,35 +8,35 @@ namespace NGitLab.Tests;
 
 public class LintClientTests
 {
-    private const string ValidCIYaml = @"
-variables:
-  CI_DEBUG_TRACE: ""true""
-build-job:
-  stage: build
-  tags:
-    - Runner-Build
-  before_script:
-    - echo before start
-    - echo before end
-  script:
-    - echo test start
-    - echo test end
-  after_script:
-    - echo after start
-    - echo after end
-  when: always
-  allow_failure: true
-";
+    private const string ValidCIYaml = """
+        variables:
+          CI_DEBUG_TRACE: "true"
+        build-job:
+          stage: build
+          tags:
+            - Runner-Build
+          before_script:
+            - echo before start
+            - echo before end
+          script:
+            - echo test start
+            - echo test end
+          after_script:
+            - echo after start
+            - echo after end
+          when: always
+          allow_failure: true
+        """;
 
-    private const string InvalidCIYaml = @"
-variables:
-  CI_DEBUG_TRACE: ""true""
-build-job:
-  script:
-    - echo test
-  this_key_should_not_exist:
-    - this should fail the linting
-";
+    private const string InvalidCIYaml = """
+        variables:
+          CI_DEBUG_TRACE: "true"
+        build-job:
+          script:
+            - echo test
+          this_key_should_not_exist:
+            - this should fail the linting
+        """;
 
     [Test]
     [NGitLabRetry]

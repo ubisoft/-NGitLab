@@ -13,29 +13,32 @@ public class JobTests
 {
     internal static void AddGitLabCiFile(IGitLabClient client, Project project, int jobCount = 1, bool manualAction = false, string branch = null, bool pipelineSucceeds = true)
     {
-        var content = @"
-variables:
-  CI_DEBUG_TRACE: ""true""
-";
+        var content = """
+            variables:
+              CI_DEBUG_TRACE: "true"
+            
+            """;
 
         for (var i = 0; i < jobCount; i++)
         {
-            content += $@"
-build{i.ToString(CultureInfo.InvariantCulture)}:
-  script:
-    - echo test
-    - echo test > file{i.ToString(CultureInfo.InvariantCulture)}.txt
-    - exit {(pipelineSucceeds ? "0" : "1")}
-  artifacts:
-    paths:
-      - '*.txt'
-";
+            content += $"""
+                build{i.ToString(CultureInfo.InvariantCulture)}:
+                  script:
+                    - echo test
+                    - echo test > file{i.ToString(CultureInfo.InvariantCulture)}.txt
+                    - exit {(pipelineSucceeds ? "0" : "1")}
+                  artifacts:
+                    paths:
+                      - '*.txt'
+                
+                """;
 
             if (manualAction)
             {
-                content += @"
-  when: manual
-";
+                content += """
+                      when: manual
+                    
+                    """;
             }
         }
 
@@ -241,10 +244,12 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
             var job = jobs.Single();
             Assert.That(job.Status, Is.EqualTo(JobStatus.Success));
 
-            var query = new JobArtifactQuery();
-            query.RefName = project.DefaultBranch;
-            query.JobName = job.Name;
-            query.ArtifactPath = "file0.txt";
+            var query = new JobArtifactQuery
+            {
+                RefName = project.DefaultBranch,
+                JobName = job.Name,
+                ArtifactPath = "file0.txt",
+            };
 
             var artifact = jobsClient.GetJobArtifact(query);
             Assert.That(artifact, Is.Not.Empty);

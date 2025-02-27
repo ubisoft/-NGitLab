@@ -26,7 +26,7 @@ public class CommitCreate
     public string AuthorName { get; set; }
 
     [JsonPropertyName("actions")]
-    public IList<CreateCommitAction> Actions { get; set; } = new List<CreateCommitAction>();
+    public IList<CreateCommitAction> Actions { get; set; } = [];
 
     [JsonPropertyName("force")]
     public bool? Force { get; set; }

@@ -18,12 +18,13 @@ public class GraphQLTests
 
         var exception = Assert.ThrowsAsync<GitLabException>(() => context.Client.GraphQL.ExecuteAsync<ProjectResponse>(new GraphQLQuery
         {
-            Query = @"
-{
-  project(fullPath: $path) {
-    unknownProperty
-  }
-}",
+            Query = """
+                {
+                  project(fullPath: $path) {
+                    unknownProperty
+                  }
+                }
+                """,
         }));
 
         Assert.That(exception.Message, Does.Contain("Field 'unknownProperty' doesn't exist on type 'Project'"));
@@ -38,13 +39,14 @@ public class GraphQLTests
 
         var response = await context.Client.GraphQL.ExecuteAsync<ProjectResponse>(new GraphQLQuery
         {
-            Query = @"
-query($path: ID!)
-{
-  project(fullPath: $path) {
-    id
-  }
-}",
+            Query = """
+                query($path: ID!)
+                {
+                  project(fullPath: $path) {
+                    id
+                  }
+                }
+                """,
             Variables =
             {
                 ["path"] = project.PathWithNamespace,

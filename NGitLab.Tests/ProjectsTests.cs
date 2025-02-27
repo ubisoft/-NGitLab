@@ -337,7 +337,7 @@ public class ProjectsTests
         Assert.That(createdProject.RepositoryAccessLevel, Is.EqualTo(RepositoryAccessLevel.Enabled));
 
         // Update
-        expectedTopics = new List<string> { "Tag-3" };
+        expectedTopics = ["Tag-3"];
         var updateOptions = new ProjectUpdate { Visibility = VisibilityLevel.Private, Topics = expectedTopics };
         var updatedProject = projectClient.Update(createdProject.Id.ToStringInvariant(), updateOptions);
         Assert.That(updatedProject.VisibilityLevel, Is.EqualTo(VisibilityLevel.Private));
@@ -377,7 +377,7 @@ public class ProjectsTests
             IssuesEnabled = true,
             MergeRequestsEnabled = true,
             VisibilityLevel = VisibilityLevel.Private,
-            Topics = new() { "t1", "t2" },
+            Topics = ["t1", "t2"],
             BuildTimeout = (int)TimeSpan.FromMinutes(15).TotalSeconds,
         };
 
@@ -494,7 +494,7 @@ public class ProjectsTests
         var project = context.CreateProject(p =>
         {
             p.VisibilityLevel = VisibilityLevel.Public;
-            p.Topics = new() { "Tag-1", "Tag-2" };
+            p.Topics = ["Tag-1", "Tag-2"];
         });
 
         var projectClient = context.Client.Projects;
@@ -608,7 +608,7 @@ public class ProjectsTests
             p.SnippetsEnabled = true;
             p.VisibilityLevel = VisibilityLevel.Internal;
             p.WikiEnabled = true;
-            p.Topics = new List<string> { "Tag-1", "Tag-2" };
+            p.Topics = ["Tag-1", "Tag-2"];
         });
 
         context.Client.GetRepository(createdProject.Id).Files.Create(new FileUpsert
@@ -709,11 +709,11 @@ public class ProjectsTests
         var topicOptional2 = CreateTopic();
 
         context.CreateProject();
-        context.CreateProject(p => p.Topics = new List<string> { topicRequired1, topicOptional1 });
-        context.CreateProject(p => p.Topics = new List<string> { topicRequired1, topicRequired2 });
-        context.CreateProject(p => p.Topics = new List<string> { topicRequired1, topicOptional2 });
-        context.CreateProject(p => p.Topics = new List<string> { topicRequired1, topicOptional1, topicRequired2 });
-        context.CreateProject(p => p.Topics = new List<string> { topicOptional1, topicOptional2, topicRequired2 });
+        context.CreateProject(p => p.Topics = [topicRequired1, topicOptional1]);
+        context.CreateProject(p => p.Topics = [topicRequired1, topicRequired2]);
+        context.CreateProject(p => p.Topics = [topicRequired1, topicOptional2]);
+        context.CreateProject(p => p.Topics = [topicRequired1, topicOptional1, topicRequired2]);
+        context.CreateProject(p => p.Topics = [topicOptional1, topicOptional2, topicRequired2]);
 
         var projectClient = context.Client.Projects;
 

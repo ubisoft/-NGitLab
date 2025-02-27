@@ -31,7 +31,7 @@ public partial class HttpRequestor
 
         private MethodType Method { get; }
 
-        public WebHeaderCollection Headers { get; } = new WebHeaderCollection();
+        public WebHeaderCollection Headers { get; } = [];
 
         private bool HasOutput
             => (Method == MethodType.Delete || Method == MethodType.Post || Method == MethodType.Put)

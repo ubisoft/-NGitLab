@@ -9,7 +9,7 @@ namespace NGitLab.Mock;
 public abstract class Collection<T> : IReadOnlyCollection<T>, INotifyCollectionChanged, INotifyPropertyChanged
     where T : GitLabObject
 {
-    private readonly List<T> _items = new();
+    private readonly List<T> _items = [];
 
     public event NotifyCollectionChangedEventHandler CollectionChanged;
 

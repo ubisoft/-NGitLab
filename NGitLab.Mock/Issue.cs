@@ -43,7 +43,7 @@ public sealed class Issue : GitLabObject
 
     public bool DiscussionLocked { get; set; }
 
-    public IList<ProjectIssueNote> Notes { get; set; } = new List<ProjectIssueNote>();
+    public IList<ProjectIssueNote> Notes { get; set; } = [];
 
     public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/-/issues/{Iid.ToString(CultureInfo.InvariantCulture)}");
 

@@ -221,11 +221,11 @@ public class GitLabDockerContainer
                 {
                     { HttpPort.ToString(CultureInfo.InvariantCulture) + "/tcp", default },
                 },
-                Env = new List<string>
-                {
+                Env =
+                [
                     "GITLAB_OMNIBUS_CONFIG=external_url 'http://localhost:" + HttpPort.ToString(CultureInfo.InvariantCulture) + "/'",
                     "GITLAB_ROOT_PASSWORD=" + AdminPassword,
-                },
+                ],
             }).ConfigureAwait(false);
 
             containers = await client.Containers.ListContainersAsync(new ContainersListParameters { All = true }).ConfigureAwait(false);

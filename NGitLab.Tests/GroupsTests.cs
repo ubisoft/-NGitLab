@@ -130,7 +130,7 @@ public class GroupsTests
         // Assert
         foreach (var skippedGroup in skippedGroupIds)
         {
-            Assert.That(resultSkip.Any(group => group.Id == skippedGroup), Is.False, $"Group {skippedGroup} found in results");
+            Assert.That(resultSkip.Exists(group => group.Id == skippedGroup), Is.False, $"Group {skippedGroup} found in results");
         }
     }
 
@@ -561,7 +561,7 @@ public class GroupsTests
         // Assert
         foreach (var skippedGroup in skippedGroupIds)
         {
-            Assert.That(resultSkip.Any(group => group.Id == skippedGroup), Is.False, $"Group {skippedGroup} found in results");
+            Assert.That(resultSkip.Exists(group => group.Id == skippedGroup), Is.False, $"Group {skippedGroup} found in results");
         }
     }
 
@@ -586,7 +586,7 @@ public class GroupsTests
         // Assert
         foreach (var skippedGroup in skippedGroupIds)
         {
-            Assert.That(resultSkip.Any(group => group.Id == skippedGroup), Is.False, $"Group {skippedGroup} found in results");
+            Assert.That(resultSkip.Exists(group => group.Id == skippedGroup), Is.False, $"Group {skippedGroup} found in results");
         }
     }
 

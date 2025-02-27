@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using NGitLab.Mock.Clients;
 using NGitLab.Mock.Config;
 using NGitLab.Models;
 using NUnit.Framework;

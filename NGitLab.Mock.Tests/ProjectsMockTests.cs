@@ -256,7 +256,7 @@ public class ProjectsMockTests
             Description = "Description",
             DefaultBranch = "foo",
             InitializeWithReadme = true,
-            Topics = new() { "t1", "t2" },
+            Topics = ["t1", "t2"],
             BuildTimeout = (int)TimeSpan.FromMinutes(15).TotalSeconds,
         };
 

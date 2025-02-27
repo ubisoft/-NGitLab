@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -98,15 +97,15 @@ public class CommitsTests
         {
             Branch = "test-cherry-pick",
             CommitMessage = "Test to cherry-pick",
-            Actions = new List<CreateCommitAction>
-            {
+            Actions =
+            [
                 new()
                 {
                     Action = "update",
                     Content = "Test to cherry-pick",
                     FilePath = "README.md",
                 },
-            },
+            ],
         });
 
         var cherryPickedCommit = commitClient.CherryPick(new CommitCherryPick
@@ -188,15 +187,15 @@ public class CommitsTests
             StartBranch = useBranchName ? startBranch : null,
             StartSha = useBranchName ? null : startCommit.Id.ToString().ToLowerInvariant(),
             CommitMessage = "First commit in new branch",
-            Actions = new List<CreateCommitAction>
-            {
+            Actions =
+            [
                 new()
                 {
                     Action = "update",
                     Content = "This is in a new branch",
                     FilePath = "README.md",
                 },
-            },
+            ],
         });
 
         // Assert
@@ -225,15 +224,15 @@ public class CommitsTests
             StartBranch = startBranch,
             StartSha = startCommit.Id.ToString().ToLowerInvariant(),
             CommitMessage = "First commit in new branch",
-            Actions = new List<CreateCommitAction>
-            {
+            Actions =
+            [
                 new()
                 {
                     Action = "update",
                     Content = "This is in a new branch",
                     FilePath = "README.md",
                 },
-            },
+            ],
         }), Throws.TypeOf<GitLabException>()
                   .With.Property(nameof(GitLabException.StatusCode)).EqualTo(HttpStatusCode.BadRequest)
                   .With.Message.Contains("start_branch, start_sha are mutually exclusive."));
@@ -260,15 +259,15 @@ public class CommitsTests
             Branch = "new-branch",
             StartBranch = startBranch,
             CommitMessage = "First commit in new branch",
-            Actions = new List<CreateCommitAction>
-            {
+            Actions =
+            [
                 new()
                 {
                     Action = "update",
                     Content = "This is in a new branch",
                     FilePath = "README.md",
                 },
-            },
+            ],
         }), Throws.TypeOf<GitLabException>()
                   .With.Property(nameof(GitLabException.StatusCode)).EqualTo(HttpStatusCode.BadRequest)
                   .With.Message.Contains("A branch called 'new-branch' already exists."));
@@ -297,15 +296,15 @@ public class CommitsTests
             Branch = "new-branch",
             StartSha = startSha.ToString().ToLowerInvariant(),
             CommitMessage = "First commit in new branch",
-            Actions = new List<CreateCommitAction>
-            {
+            Actions =
+            [
                 new()
                 {
                     Action = "update",
                     Content = "This is in a new branch",
                     FilePath = "README.md",
                 },
-            },
+            ],
         }), Throws.TypeOf<GitLabException>()
                   .With.Property(nameof(GitLabException.StatusCode)).EqualTo(HttpStatusCode.BadRequest)
                   .With.Message.Contains("A branch called 'new-branch' already exists."));
@@ -325,15 +324,15 @@ public class CommitsTests
         {
             Branch = "new-branch",
             CommitMessage = "First commit in new branch",
-            Actions = new List<CreateCommitAction>
-            {
+            Actions =
+            [
                 new()
                 {
                     Action = "update",
                     Content = "This is in a new branch",
                     FilePath = "README.md",
                 },
-            },
+            ],
         }), Throws.TypeOf<GitLabException>()
                   .With.Property(nameof(GitLabException.StatusCode)).EqualTo(HttpStatusCode.BadRequest)
                   .With.Message.Contains("You can only create or edit files when you are on a branch"));
@@ -353,15 +352,15 @@ public class CommitsTests
         {
             Branch = "main",
             CommitMessage = "Initial commit",
-            Actions = new List<CreateCommitAction>
-            {
+            Actions =
+            [
                 new()
                 {
                     Action = "create",
                     Content = "my wonderful readme",
                     FilePath = "README.md",
                 },
-            },
+            ],
         });
 
         // Assert
@@ -384,15 +383,15 @@ public class CommitsTests
             Branch = "test-start-sha",
             CommitMessage = "New commit",
             StartSha = commit.Id.ToString().ToLowerInvariant(),
-            Actions = new List<CreateCommitAction>
-            {
+            Actions =
+            [
                 new()
                 {
                     Action = "create",
                     FilePath = "file.txt",
                     Content = "content",
                 },
-            },
+            ],
         });
         Assert.That(newCommit, Is.Not.Null);
     }
@@ -412,8 +411,8 @@ public class CommitsTests
             Branch = "test-set-executable-flag",
             CommitMessage = "New commit",
             StartBranch = project.DefaultBranch,
-            Actions = new List<CreateCommitAction>
-            {
+            Actions =
+            [
                 new()
                 {
                     Action = "create",
@@ -426,7 +425,7 @@ public class CommitsTests
                     FilePath = "script.sh",
                     IsExecutable = true,
                 },
-            },
+            ],
         });
         Assert.That(newCommit, Is.Not.Null);
 

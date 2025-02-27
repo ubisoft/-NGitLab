@@ -238,8 +238,8 @@ public static class GitLabHelpers
 
         var span = fullPath.AsSpan().Trim('/');
         var slash = span.LastIndexOf('/');
-        var path = slash == -1 ? span.ToString() : span.Slice(slash + 1).ToString();
-        var @namespace = slash == -1 ? null : span.Slice(0, slash).ToString();
+        var path = slash == -1 ? span.ToString() : span[(slash + 1)..].ToString();
+        var @namespace = slash == -1 ? null : span[..slash].ToString();
 
         return WithGroup(config, name ?? path, id, @namespace, description, visibility, addDefaultUserAsMaintainer, configure: group =>
         {
@@ -345,8 +345,8 @@ public static class GitLabHelpers
 
         var span = fullPath.AsSpan().Trim('/');
         var slash = span.LastIndexOf('/');
-        var path = slash == -1 ? span.ToString() : span.Slice(slash + 1).ToString();
-        var @namespace = slash == -1 ? null : span.Slice(0, slash).ToString();
+        var path = slash == -1 ? span.ToString() : span[(slash + 1)..].ToString();
+        var @namespace = slash == -1 ? null : span[..slash].ToString();
 
         return config.WithProject(
             name: name ?? path,
@@ -1375,7 +1375,7 @@ public static class GitLabHelpers
                 prj.Repository.CreateBranch(commit.SourceBranch);
 
             var files = commit.Files.Count == 0
-                ? new List<File>() { File.CreateFromText("test.txt", Guid.NewGuid().ToString()) }
+                ? [File.CreateFromText("test.txt", Guid.NewGuid().ToString())]
                 : commit.Files.Select(x => File.CreateFromText(x.Path, x.Content ?? string.Empty)).ToList();
 
             var submodules = CreateSubModules(server, prj, commit);
@@ -1399,7 +1399,7 @@ public static class GitLabHelpers
 
     private static IEnumerable<string> CreateSubModules(GitLabServer server, Project prj, GitLabCommit commit)
     {
-        List<string> submodules = new();
+        List<string> submodules = [];
         foreach (var submodule in commit.SubModules)
         {
             var subModuleProject = server.AllProjects.FirstOrDefault(x =>
@@ -1722,7 +1722,7 @@ public static class GitLabHelpers
         ppl.CreatedAt = jobs.Select(x => x.CreatedAt).DefaultIfEmpty(DateTime.UtcNow).Min().ToDateTimeOffsetAssumeUtc();
         var dateTimes = jobs.Where(x => x.StartedAt != default).Select(x => x.StartedAt).ToArray();
         ppl.StartedAt = dateTimes.Length == 0 ? null : dateTimes.Min().ToDateTimeOffsetAssumeUtc();
-        ppl.FinishedAt = jobs.Any(x => x.Status is JobStatus.Created or JobStatus.Pending or JobStatus.Preparing or JobStatus.WaitingForResource or JobStatus.Running)
+        ppl.FinishedAt = jobs.Exists(x => x.Status is JobStatus.Created or JobStatus.Pending or JobStatus.Preparing or JobStatus.WaitingForResource or JobStatus.Running)
             ? null
             : jobs.Where(x => x.FinishedAt != default).Select(x => (DateTimeOffset)x.FinishedAt).DefaultIfEmpty(ppl.CreatedAt).Max();
 

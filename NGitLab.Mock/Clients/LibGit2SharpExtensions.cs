@@ -22,7 +22,7 @@ public static class LibGit2SharpExtensions
             CreatedAt = commit.Committer.When.UtcDateTime,
             Id = new Sha1(commit.Sha),
             Message = commit.Message,
-            ShortId = commit.Sha.Substring(0, 8),
+            ShortId = commit.Sha[..8],
             Title = commit.MessageShort,
             Parents = commit.Parents.Select(p => new Sha1(p.Sha)).ToArray(),
             Status = commitInfo?.Status ?? "success",

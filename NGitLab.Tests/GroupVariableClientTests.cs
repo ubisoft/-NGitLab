@@ -94,7 +94,7 @@ public class GroupVariableClientTests
         {
             Value = "My value edited",
             Protected = false,
-            EnvironmentScope = newScope
+            EnvironmentScope = newScope,
         });
 
         Assert.That(variable.Key, Is.EqualTo("My_Key"));

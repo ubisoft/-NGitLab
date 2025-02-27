@@ -147,7 +147,7 @@ public class HttpRequestorTests
 
         public bool ShouldRetryCalled { get; set; }
 
-        public HashSet<WebRequest> HandledRequests { get; } = new HashSet<WebRequest>();
+        public HashSet<WebRequest> HandledRequests { get; } = [];
 
         public MockRequestOptions()
             : base(retryCount: 0, retryInterval: TimeSpan.Zero)

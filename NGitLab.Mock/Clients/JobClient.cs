@@ -78,7 +78,7 @@ internal sealed class JobClient : ClientBase, IJobClient
                 }
             }
 
-            var jobs = project.Jobs.Where(j => scopes.Any(scope => string.Equals(j.Status.ToString(), scope, StringComparison.OrdinalIgnoreCase)));
+            var jobs = project.Jobs.Where(j => scopes.Exists(scope => string.Equals(j.Status.ToString(), scope, StringComparison.OrdinalIgnoreCase)));
             return jobs.Select(j => j.ToJobClient()).ToList();
         }
     }

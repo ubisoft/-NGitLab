@@ -120,7 +120,8 @@ public class GitLabClientMockTest
     {
         return typeof(IGitLabClient)
             .GetMethods()
-            .Where(method => method.IsPublic)
-            .Where(method => method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == typeof(TParameter));
+            .Where(method => method.IsPublic &&
+                             method.GetParameters().Length == 1 &&
+                             method.GetParameters()[0].ParameterType == typeof(TParameter));
     }
 }

@@ -156,7 +156,7 @@ public sealed class Pipeline : GitLabObject
             Coverage = Coverage,
             ProjectId = ProjectId,
             WebUrl = Project?.WebUrl + "/-/pipelines/" + Id.ToString(CultureInfo.InvariantCulture),
-            Name = Name
+            Name = Name,
         };
     }
 }

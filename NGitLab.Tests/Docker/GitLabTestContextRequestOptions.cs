@@ -17,7 +17,7 @@ namespace NGitLab.Tests.Docker;
 /// </summary>
 internal sealed class GitLabTestContextRequestOptions : RequestOptions
 {
-    private readonly List<WebRequest> _allRequests = new();
+    private readonly List<WebRequest> _allRequests = [];
     private static readonly SemaphoreSlim s_semaphoreSlim = new(1, 1);
 
     private readonly ConcurrentDictionary<WebRequest, LoggableRequestStream> _pendingRequest = new();

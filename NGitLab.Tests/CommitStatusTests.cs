@@ -141,7 +141,7 @@ public class CommitStatusTests
         string commitStatusName = null;
         for (var i = 0; i < 10; i++)
         {
-            commitStatusName = $"Commit Status {Guid.NewGuid().ToString("N")}";
+            commitStatusName = $"Commit Status {Guid.NewGuid():N}";
             var commitStatusCreate = context.SetUpCommitStatusCreate("running", commitStatusName);
             _ = context.CommitStatusClient.AddOrUpdate(commitStatusCreate);
         }

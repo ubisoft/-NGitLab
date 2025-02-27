@@ -11,13 +11,15 @@ public class JsonConverterTests
     [Test]
     public void Test_DeserializeNullToSupportedValueType_Succeeds()
     {
-        var json = @"{
-  ""a_boolean"": null,
-  ""a_date_time"": null,
-  ""a_double"": null,
-  ""an_int32"": null,
-  ""an_int64"": null
-}";
+        var json = """
+            {
+              "a_boolean": null,
+              "a_date_time": null,
+              "a_double": null,
+              "an_int32": null,
+              "an_int64": null
+            }
+            """;
         var obj = Serializer.Deserialize<MyDataContract>(json);
 
         Assert.That(obj, Is.Not.Null);

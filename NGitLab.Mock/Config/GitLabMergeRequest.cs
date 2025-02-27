@@ -37,12 +37,12 @@ public class GitLabMergeRequest : GitLabObject<GitLabProject>
     /// <summary>
     /// Labels names
     /// </summary>
-    public IList<string> Labels { get; } = new List<string>();
+    public IList<string> Labels { get; } = [];
 
     /// <summary>
     /// Approvers usernames
     /// </summary>
-    public IList<string> Approvers { get; } = new List<string>();
+    public IList<string> Approvers { get; } = [];
 
     public GitLabCommentsCollection Comments { get; }
 

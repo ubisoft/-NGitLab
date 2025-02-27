@@ -28,7 +28,7 @@ public class WebHeadersDictionaryAdaptorTests
     [Test]
     public void Test_empty_header_collection_works_correctly()
     {
-        VerifyAdaptor(new());
+        VerifyAdaptor([]);
     }
 
     [Test]

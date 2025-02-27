@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using NGitLab.Mock.Clients;
-using NGitLab.Models;
+﻿using NGitLab.Models;
 using NUnit.Framework;
 
 namespace NGitLab.Mock.Tests;
@@ -24,15 +22,15 @@ public class RepositoryMockTests
             StartBranch = startBranch,
             StartSha = initCommit.Sha,
             CommitMessage = "First commit in new branch",
-            Actions = new List<CreateCommitAction>
-            {
+            Actions =
+            [
                 new()
                 {
                     Action = "update",
                     Content = "This is in a new branch",
                     FilePath = "README.md",
                 },
-            },
+            ],
         }), Throws.TypeOf<GitLabException>()
                   .With.Message.Contains("GitLab server returned an error (BadRequest): start_branch, start_sha are mutually exclusive."));
     }
@@ -57,15 +55,15 @@ public class RepositoryMockTests
             Branch = newBranch,
             StartBranch = startBranch,
             CommitMessage = "First commit in new branch",
-            Actions = new List<CreateCommitAction>
-            {
+            Actions =
+            [
                 new()
                 {
                     Action = "update",
                     Content = "This is in a new branch",
                     FilePath = "README.md",
                 },
-            },
+            ],
         }), Throws.TypeOf<GitLabException>()
                   .With.Message.Contains($"A branch called '{newBranch}' already exists."));
     }
@@ -90,15 +88,15 @@ public class RepositoryMockTests
             Branch = newBranch,
             StartSha = initCommit.Sha,
             CommitMessage = "First commit in new branch",
-            Actions = new List<CreateCommitAction>
-            {
+            Actions =
+            [
                 new()
                 {
                     Action = "create",
                     Content = "This is in a new branch",
                     FilePath = "README.md",
                 },
-            },
+            ],
         }), Throws.TypeOf<GitLabException>()
                   .With.Message.Contains($"A branch called '{newBranch}' already exists."));
     }
@@ -122,15 +120,15 @@ public class RepositoryMockTests
             Branch = newBranch,
             StartBranch = startBranch,
             CommitMessage = commitMessage,
-            Actions = new List<CreateCommitAction>
-            {
+            Actions =
+            [
                 new()
                 {
                     Action = "create",
                     Content = "This is in a new branch",
                     FilePath = "README.md",
                 },
-            },
+            ],
         });
         Assert.That(newCommit.Message.Trim(), Is.EqualTo(commitMessage));
     }
@@ -153,15 +151,15 @@ public class RepositoryMockTests
             Branch = newBranch,
             StartSha = initCommit.Sha,
             CommitMessage = commitMessage,
-            Actions = new List<CreateCommitAction>
-            {
+            Actions =
+            [
                 new()
                 {
                     Action = "create",
                     Content = "This is in a new branch",
                     FilePath = "README.md",
                 },
-            },
+            ],
         });
         Assert.That(newCommit.Message.Trim(), Is.EqualTo(commitMessage));
     }
@@ -181,15 +179,15 @@ public class RepositoryMockTests
         {
             Branch = "new-branch",
             CommitMessage = commitMessage,
-            Actions = new List<CreateCommitAction>
-            {
+            Actions =
+            [
                 new()
                 {
                     Action = "create",
                     Content = "This is in a new branch",
                     FilePath = "README.md",
                 },
-            },
+            ],
         }), Throws.TypeOf<GitLabException>()
                   .With.Message.Contains("You can only create or edit files when you are on a branch."));
     }
@@ -209,15 +207,15 @@ public class RepositoryMockTests
         {
             Branch = project.DefaultBranch,
             CommitMessage = commitMessage,
-            Actions = new List<CreateCommitAction>
-            {
+            Actions =
+            [
                 new()
                 {
                     Action = "create",
                     Content = "This is in an existing branch",
                     FilePath = "README.md",
                 },
-            },
+            ],
         });
         Assert.That(newCommit.Message.Trim(), Is.EqualTo(commitMessage));
     }

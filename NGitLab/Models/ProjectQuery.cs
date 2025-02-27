@@ -69,7 +69,7 @@ public class ProjectQuery
     /// <summary>
     /// Limit results to projects that match all of the given topics.
     /// </summary>
-    public IList<string> Topics { get; } = new List<string>();
+    public IList<string> Topics { get; } = [];
 }
 
 public enum ProjectQueryScope

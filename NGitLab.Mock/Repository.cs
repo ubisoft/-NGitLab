@@ -26,7 +26,7 @@ public sealed class Repository : GitLabObject, IDisposable
     private TemporaryDirectory _directory;
     private string _repositoryDirectory;
     private LibGit2Sharp.Repository _repository;
-    private readonly IList<ReleaseTag> _releaseTags = new List<ReleaseTag>();
+    private readonly IList<ReleaseTag> _releaseTags = [];
 
     public Project Project => (Project)Parent;
 
@@ -222,7 +222,7 @@ public sealed class Repository : GitLabObject, IDisposable
                 (true, _) => commitCreate.StartBranch,
                 (_, true) => commitCreate.StartSha,
                 _ => branchExistsAlready ? commitCreate.Branch : throw GitLabException.BadRequest(
-                    "GitLab server returned an error (BadRequest): You can only create or edit files when you are on a branch.")
+                    "GitLab server returned an error (BadRequest): You can only create or edit files when you are on a branch."),
             };
 
             Commands.Checkout(repo, @ref);

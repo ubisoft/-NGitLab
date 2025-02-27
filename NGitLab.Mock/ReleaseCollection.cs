@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using NGitLab.Mock.Clients;
 
 namespace NGitLab.Mock;
 

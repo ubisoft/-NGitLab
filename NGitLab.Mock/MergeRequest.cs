@@ -53,9 +53,9 @@ public sealed class MergeRequest : GitLabObject
         }
     }
 
-    public IList<UserRef> Assignees { get; set; } = new List<UserRef>();
+    public IList<UserRef> Assignees { get; set; } = [];
 
-    public IList<UserRef> Reviewers { get; set; } = new List<UserRef>();
+    public IList<UserRef> Reviewers { get; set; } = [];
 
     public string SourceBranch { get; set; }
 
@@ -149,7 +149,7 @@ public sealed class MergeRequest : GitLabObject
 
     public Milestone Milestone { get; set; }
 
-    public IList<string> Labels { get; } = new List<string>();
+    public IList<string> Labels { get; } = [];
 
     public NoteCollection<MergeRequestComment> Comments { get; }
 
@@ -161,7 +161,7 @@ public sealed class MergeRequest : GitLabObject
     public bool Draft => Title is not null &&
          Title.StartsWith("Draft:", StringComparison.OrdinalIgnoreCase);
 
-    public IList<UserRef> Approvers { get; } = new List<UserRef>();
+    public IList<UserRef> Approvers { get; } = [];
 
     public MergeRequestChangeCollection Changes
     {
@@ -171,7 +171,7 @@ public sealed class MergeRequest : GitLabObject
             var changes = new MergeRequestChangeCollection(this);
             foreach (var stat in stats)
             {
-                var diff = stat.Patch.Substring(stat.Patch.IndexOf("@@", StringComparison.Ordinal));
+                var diff = stat.Patch[stat.Patch.IndexOf("@@", StringComparison.Ordinal)..];
                 changes.Add(diff, stat.OldPath, stat.Path, stat.Status);
             }
 

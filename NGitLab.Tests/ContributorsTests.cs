@@ -63,8 +63,8 @@ public class ContributorsTests
 
         var contributors = await GitLabTestContext.RetryUntilAsync(() => contributorsClient.All.ToList(), c => c.Count >= 2, TimeSpan.FromMinutes(2));
 
-        Assert.That(contributors.Any(x => string.Equals(x.Email, currentUser.Email, StringComparison.Ordinal)), Is.True);
-        Assert.That(contributors.Any(x => string.Equals(x.Email, userUpsert.Email, StringComparison.Ordinal)), Is.True);
+        Assert.That(contributors.Exists(x => string.Equals(x.Email, currentUser.Email, StringComparison.Ordinal)), Is.True);
+        Assert.That(contributors.Exists(x => string.Equals(x.Email, userUpsert.Email, StringComparison.Ordinal)), Is.True);
 
         context.AdminClient.Users.Delete(user.Id);
     }

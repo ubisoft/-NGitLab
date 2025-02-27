@@ -23,7 +23,7 @@ public class GitLabIssue : GitLabObject<GitLabProject>
     /// <summary>
     /// Labels names
     /// </summary>
-    public IList<string> Labels { get; } = new List<string>();
+    public IList<string> Labels { get; } = [];
 
     /// <summary>
     /// Author username (required if default user not defined)

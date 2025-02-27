@@ -26,9 +26,11 @@ public class CompareTests
         using var context = await GitLabTestContext.CreateAsync();
         var project = context.CreateProject(initializeWithCommits: true);
 
-        var devTestBranchCreate = new BranchCreate();
-        devTestBranchCreate.Ref = project.DefaultBranch;
-        devTestBranchCreate.Name = "devtest";
+        var devTestBranchCreate = new BranchCreate
+        {
+            Ref = project.DefaultBranch,
+            Name = "devtest",
+        };
 
         context.Client.GetRepository(project.Id).Branches.Create(devTestBranchCreate);
 

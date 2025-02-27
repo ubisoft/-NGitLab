@@ -193,7 +193,7 @@ public class RepositoryClientTests
 
         Assert.That(treeObjects.Count(t => t.Type == ObjectType.blob), Is.EqualTo(expectedFileCount));
         Assert.That(treeObjects.Count(t => t.Type == ObjectType.tree), Is.EqualTo(expectedDirCount));
-        Assert.That(treeObjects.All(t => string.Equals(t.Path, t.Name, StringComparison.Ordinal)), Is.True);
+        Assert.That(treeObjects.TrueForAll(t => string.Equals(t.Path, t.Name, StringComparison.Ordinal)), Is.True);
     }
 
     [TestCase(4)]
@@ -245,7 +245,7 @@ public class RepositoryClientTests
             treeObjects.Add(item);
         }
 
-        Assert.That(treeObjects.All(t => t.Path.StartsWith(RepositoryClientTestsContext.SubfolderName, StringComparison.OrdinalIgnoreCase)), Is.True);
+        Assert.That(treeObjects.TrueForAll(t => t.Path.StartsWith(RepositoryClientTestsContext.SubfolderName, StringComparison.OrdinalIgnoreCase)), Is.True);
     }
 
     [Test]

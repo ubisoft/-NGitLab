@@ -274,7 +274,7 @@ public class PipelineTests
 
         var pipeline = await pipelineClient.CreateAsync(new PipelineCreate
         {
-            Ref = project.DefaultBranch
+            Ref = project.DefaultBranch,
         });
 
 

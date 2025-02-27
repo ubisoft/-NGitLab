@@ -68,11 +68,11 @@ public class RunnerTests
         runnersClient.EnableRunner(project2.Id, new RunnerId(runner.Id));
 
         var result = runnersClient.OfProject(project.Id).ToList();
-        Assert.That(result.Any(r => r.Id == runner.Id), Is.True);
+        Assert.That(result.Exists(r => r.Id == runner.Id), Is.True);
 
         runnersClient.DisableRunner(project.Id, new RunnerId(runner.Id));
         result = runnersClient.OfProject(project.Id).ToList();
-        Assert.That(result.All(r => r.Id != runner.Id), Is.True);
+        Assert.That(result.TrueForAll(r => r.Id != runner.Id), Is.True);
     }
 
     [Test]

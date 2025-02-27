@@ -22,14 +22,14 @@ public class GitLabCommit : GitLabObject<GitLabProject>
     /// <summary>
     /// Files in the repository at this commit
     /// </summary>
-    public IList<GitLabFileDescriptor> Files { get; } = new List<GitLabFileDescriptor>();
+    public IList<GitLabFileDescriptor> Files { get; } = [];
 
     /// <summary>
     /// Submodules added at this commit
     /// </summary>
-    public IList<GitLabSubModuleDescriptor> SubModules { get; } = new List<GitLabSubModuleDescriptor>();
+    public IList<GitLabSubModuleDescriptor> SubModules { get; } = [];
 
-    public IList<string> Tags { get; } = new List<string>();
+    public IList<string> Tags { get; } = [];
 
     /// <summary>
     /// Source branch if a checkout or for a merge commit (required for merge commit)
