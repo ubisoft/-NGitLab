@@ -136,7 +136,7 @@ NGitLab.ICommitClient.GetJobStatus(string branchName) -> NGitLab.JobStatus
 NGitLab.ICommitClient.GetRelatedMergeRequestsAsync(NGitLab.Models.RelatedMergeRequestsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
 NGitLab.ICommitClient.Revert(NGitLab.Models.CommitRevert revert) -> NGitLab.Models.Commit
 NGitLab.ICommitStatusClient
-NGitLab.ICommitStatusClient.AddOrUpdate(NGitLab.Models.CommitStatusCreate status) -> NGitLab.Models.CommitStatusCreate
+NGitLab.ICommitStatusClient.AddOrUpdate(NGitLab.Models.CommitStatusCreate status) -> NGitLab.Models.CommitStatus
 NGitLab.ICommitStatusClient.AllBySha(string commitSha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.CommitStatus>
 NGitLab.ICommitStatusClient.GetAsync(string commitSha, NGitLab.Models.CommitStatusQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.CommitStatus>
 NGitLab.IContributorClient
@@ -488,7 +488,7 @@ NGitLab.Impl.CommitClient.GetJobStatus(string branchName) -> NGitLab.JobStatus
 NGitLab.Impl.CommitClient.GetRelatedMergeRequestsAsync(NGitLab.Models.RelatedMergeRequestsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
 NGitLab.Impl.CommitClient.Revert(NGitLab.Models.CommitRevert revert) -> NGitLab.Models.Commit
 NGitLab.Impl.CommitStatusClient
-NGitLab.Impl.CommitStatusClient.AddOrUpdate(NGitLab.Models.CommitStatusCreate status) -> NGitLab.Models.CommitStatusCreate
+NGitLab.Impl.CommitStatusClient.AddOrUpdate(NGitLab.Models.CommitStatusCreate status) -> NGitLab.Models.CommitStatus
 NGitLab.Impl.CommitStatusClient.AllBySha(string commitSha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.CommitStatus>
 NGitLab.Impl.CommitStatusClient.CommitStatusClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.CommitStatusClient.GetAsync(string commitSha, NGitLab.Models.CommitStatusQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.CommitStatus>
@@ -1607,8 +1607,6 @@ NGitLab.Models.CommitStatusCreate.Ref.get -> string
 NGitLab.Models.CommitStatusCreate.Ref.set -> void
 NGitLab.Models.CommitStatusCreate.State.get -> string
 NGitLab.Models.CommitStatusCreate.State.set -> void
-NGitLab.Models.CommitStatusCreate.Status.get -> string
-NGitLab.Models.CommitStatusCreate.Status.set -> void
 NGitLab.Models.CommitStatusCreate.TargetUrl.get -> string
 NGitLab.Models.CommitStatusCreate.TargetUrl.set -> void
 NGitLab.Models.CommitStatusQuery

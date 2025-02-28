@@ -25,7 +25,7 @@ public class CommitStatusClient : ICommitStatusClient
         return _api.Get().GetAllAsync<CommitStatus>(url);
     }
 
-    public CommitStatusCreate AddOrUpdate(CommitStatusCreate status) => _api.Post().With(status).To<CommitStatusCreate>($"{_statusCreatePath}/{status.CommitSha}");
+    public CommitStatus AddOrUpdate(CommitStatusCreate status) => _api.Post().With(status).To<CommitStatus>($"{_statusCreatePath}/{status.CommitSha}");
 
     private string GetCommitStatusesPath(string commitSha) => $"{_projectPath}/repository/commits/{commitSha.ToLowerInvariant()}/statuses";
 

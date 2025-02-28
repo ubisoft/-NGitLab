@@ -15,7 +15,7 @@ internal sealed class CommitStatusClient : ClientBase, ICommitStatusClient
         _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
-    CommitStatusCreate ICommitStatusClient.AddOrUpdate(CommitStatusCreate status)
+    Models.CommitStatus ICommitStatusClient.AddOrUpdate(CommitStatusCreate status)
     {
         using (Context.BeginOperationScope())
         {
@@ -32,10 +32,9 @@ internal sealed class CommitStatusClient : ClientBase, ICommitStatusClient
             commitStatus.Coverage = status.Coverage;
             commitStatus.Ref = status.Ref;
             commitStatus.Sha = status.CommitSha;
-            commitStatus.Status = status.Status;
             commitStatus.TargetUrl = status.TargetUrl;
 
-            return commitStatus.ToClientCommitStatusCreate();
+            return commitStatus.ToClientCommitStatus();
         }
 
         static bool Equals(CommitStatus a, CommitStatusCreate b)
